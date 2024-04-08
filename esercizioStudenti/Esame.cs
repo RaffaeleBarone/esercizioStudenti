@@ -25,6 +25,13 @@ namespace esercizioStudenti
         {
         }
 
+        public Esame(string? materia, DateTime data, int voto)
+        {
+            this.materia = materia;
+            this.data = data;
+            this.voto = voto;
+        }
+
         public override string ToString()
         {
             return $"Materia: {materia}, Data: {data}, Voto: {voto}";

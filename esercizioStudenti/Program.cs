@@ -12,27 +12,27 @@ using System.Linq;
 
 static class Program
 {
-   static List<Studente> listaStudenti = new List<Studente>();
-   static List<Esame> listaEsami = new List<Esame>();
+    static List<Studente> listaStudenti = new List<Studente>();
+    static List<Esame> listaEsami = new List<Esame>();
 
     static void Main(string[] args)
     {
         bool continua = true;
-        
+
 
         while (continua)
         {
-        Console.WriteLine("Menù:");
-        Console.WriteLine("1. Aggiungi studente");
-        Console.WriteLine("2. Elimina studente");
-        Console.WriteLine("3. Modifica studente");
-        Console.WriteLine("4. Mostra lista studenti");
-        Console.WriteLine("5. Ordina per età (crescente)");
-        Console.WriteLine("6. Ordina per età (decrescente)");
-        Console.WriteLine("7. Esci");
+            Console.WriteLine("Menù:");
+            Console.WriteLine("1. Aggiungi studente");
+            Console.WriteLine("2. Elimina studente");
+            Console.WriteLine("3. Modifica studente");
+            Console.WriteLine("4. Mostra lista studenti");
+            Console.WriteLine("5. Ordina per età (crescente)");
+            Console.WriteLine("6. Ordina per età (decrescente)");
+            Console.WriteLine("7. Esci");
 
-        Console.Write("Scelta:");
-        string scelta = Console.ReadLine();
+            Console.Write("Scelta:");
+            string scelta = Console.ReadLine();
 
 
             switch (scelta)
@@ -56,6 +56,9 @@ static class Program
                     OrdinaPerEtaDecrescente();
                     break;
                 case "7":
+                    AggiungiEsameStudente();
+                    break;
+                case "8":
                     continua = false;
                     break;
                 default:
@@ -98,12 +101,14 @@ static class Program
         Console.Write("Inserisci l'id dello studente da eliminare:");
         int id = int.Parse(Console.ReadLine());
 
-        if(id >= 0 && id < listaStudenti.Count) {
+        if (id >= 0 && id < listaStudenti.Count)
+        {
             listaStudenti.RemoveAt(id);
         }
 
-        else { 
-         Console.WriteLine("Id non trovato");
+        else
+        {
+            Console.WriteLine("Id non trovato");
         }
     }
 
@@ -144,12 +149,12 @@ static class Program
             Console.WriteLine($"{i}. {listaStudenti[i]}");
         }
 
-        for(int i = 0; i < listaStudenti.Count; i++) 
+        for (int i = 0; i < listaStudenti.Count; i++)
         {
             Console.WriteLine(listaEsami);
 
             Studente studente = new Studente();
-           
+
             Console.WriteLine(studente.mediaVoti);
         }
     }
@@ -157,7 +162,7 @@ static class Program
 
     static void OrdinaPerEtaCrescente()
     {
-        listaStudenti = listaStudenti.OrderBy(s  => s.eta).ToList();
+        listaStudenti = listaStudenti.OrderBy(s => s.eta).ToList();
         Console.WriteLine("Lista degli studenti ordinata per età in ordine crescente:");
         MostraListaStudenti();
     }
@@ -167,5 +172,32 @@ static class Program
         listaStudenti = listaStudenti.OrderByDescending(s => s.eta).ToList();
         Console.WriteLine("Lista degli studenti ordinata per età in ordine decrescente:");
         MostraListaStudenti();
+    }
+
+    static void AggiungiEsameStudente()
+    {
+        Console.WriteLine("Inserire l'id dello studente al quale aggiungere l'esame:");
+        int id = int.Parse(Console.ReadLine());
+
+        if (id >= 0 && id < listaStudenti.Count)
+        {
+
+            Console.WriteLine("Inserire materia d'esame");
+            string materia = Console.ReadLine();
+
+            Console.WriteLine("Inserire data dell'esame");
+            DateTime data = DateTime.Now;   //FIXME ?
+
+            Console.WriteLine("Inserire il voto ottenuto all'esame dallo studente");
+            int voto = int.Parse(Console.ReadLine());
+
+            Esame nuovoEsame = new Esame(materia, data, voto);
+            listaEsami.Add(nuovoEsame);
+        }
+
+        else
+        {
+            Console.WriteLine("Id non trovato");
+        }
     }
 }
