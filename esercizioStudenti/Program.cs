@@ -12,7 +12,8 @@ using System.Linq;
 
 static class Program
 {
-    static List<Studente> listaStudenti = new List<Studente>();
+   static List<Studente> listaStudenti = new List<Studente>();
+   static List<Esame> listaEsami = new List<Esame>();
 
     static void Main(string[] args)
     {
@@ -141,6 +142,15 @@ static class Program
         for (int i = 0; i < listaStudenti.Count; i++)
         {
             Console.WriteLine($"{i}. {listaStudenti[i]}");
+        }
+
+        for(int i = 0; i < listaStudenti.Count; i++) 
+        {
+            Console.WriteLine(listaEsami);
+
+            Studente studente = new Studente();
+           
+            Console.WriteLine(studente.mediaVoti);
         }
     }
 
