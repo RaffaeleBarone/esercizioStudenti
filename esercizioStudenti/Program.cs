@@ -67,21 +67,29 @@ static class Program
 
     static void AggiungiStudente()
     {
-        Console.Write("Inserisci id studente:");
-        int id = int.Parse(Console.ReadLine());
-        Console.WriteLine("Inserisci il nome dello studente:");
-        string nome = Console.ReadLine();
-        Console.WriteLine("Inserisci il cognome dello studente:");
-        string cognome = Console.ReadLine();
-        Console.WriteLine("Inserisci l'età dello studente:");
-        int eta = int.Parse(Console.ReadLine());
-        Console.WriteLine("Inserisci la media dei voti dello studente:");
-        double mediaVoti = double.Parse(Console.ReadLine());
+        try
+        {
+            Console.Write("Inserisci id studente:");
+            int id = int.Parse(Console.ReadLine());
+            Console.WriteLine("Inserisci il nome dello studente:");
+            string nome = Console.ReadLine();
+            Console.WriteLine("Inserisci il cognome dello studente:");
+            string cognome = Console.ReadLine();
+            Console.WriteLine("Inserisci l'età dello studente:");
+            int eta = int.Parse(Console.ReadLine());
+            Console.WriteLine("Inserisci la media dei voti dello studente:");
+            double mediaVoti = double.Parse(Console.ReadLine());
 
-        Studente nuovoStudente = new Studente(id, nome, cognome, eta, mediaVoti);
-        listaStudenti.Add(nuovoStudente);
+            Studente nuovoStudente = new Studente(id, nome, cognome, eta, mediaVoti);
+            listaStudenti.Add(nuovoStudente);
 
-        Console.WriteLine("Studente aggiunto!");
+            Console.WriteLine("Studente aggiunto!");
+        }
+
+        catch (FormatException)
+        {
+            Console.WriteLine("Errore! Input non valido");
+        }
     }
 
     static void RimuoviStudente()
