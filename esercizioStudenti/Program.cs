@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-class Program
+static class Program
 {
     static List<Studente> listaStudenti = new List<Studente>();
 

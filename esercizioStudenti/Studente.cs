@@ -22,5 +22,10 @@ namespace esercizioStudenti
             this.eta = eta;
             this.mediaVoti = mediaVoti;
         }
+
+        public override string ToString()
+        {
+            return $"ID: {id}, Nome: {nome}, Cognome: {cognome}, Età: {eta}, Media voti: {mediaVoti}";
+        }
     }
 }
