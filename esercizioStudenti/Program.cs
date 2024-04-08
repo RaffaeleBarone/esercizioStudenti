@@ -123,15 +123,19 @@ class Program
 
     static void MostraListaStudenti()
     {
-        Console.WriteLine("Lista studenti:");
-
-        for(int i = 0; i < listaStudenti.Count; i++)
+        if (listaStudenti.Count == 0)
         {
-            Console.WriteLine($"{i} {listaStudenti[i]}");
-            
+            Console.WriteLine("Nessuno studente presente.");
+            return;
         }
 
+        Console.WriteLine("Lista Studenti:");
+        for (int i = 0; i < listaStudenti.Count; i++)
+        {
+            Console.WriteLine($"{i}. {listaStudenti[i]}");
+        }
     }
+
 
     static void OrdinaPerEtaCrescente()
     {
