@@ -99,18 +99,32 @@ static class Program
 
     static void RimuoviStudente()
     {
+        //Console.Write("Inserisci l'id dello studente da eliminare:");
+        //int id = int.Parse(Console.ReadLine());
+
+        //if (id >= 0 && id < listaStudenti.Count)
+        //{
+        //    listaStudenti.RemoveAt(id);
+        //}
+
+        //else
+        //{
+        //    Console.WriteLine("Id non trovato");
+        //}
+
         Console.Write("Inserisci l'id dello studente da eliminare:");
         int id = int.Parse(Console.ReadLine());
 
-        if (id >= 0 && id < listaStudenti.Count)
-        {
-            listaStudenti.RemoveAt(id);
-        }
+        //foreach(Studente studente in listaStudenti)
+        //{
+        //    Console.WriteLine(studente);
+        //}
 
-        else
-        {
-            Console.WriteLine("Id non trovato");
-        }
+        //listaStudenti.Remove(id);
+
+        var studenteDaRimuovere = listaStudenti.Single(s => s.id == id);
+        listaStudenti.Remove(studenteDaRimuovere);
+
     }
 
     static void ModificaStudente()
@@ -118,22 +132,45 @@ static class Program
         Console.Write("Inserisci l'id dello studente da modificare:");
         int id = int.Parse(Console.ReadLine());
 
-        if (id >= 0 && id < listaStudenti.Count)
-        {
-            Console.Write("Inserisci nuovo nome: ");
-            string nuovoNome = Console.ReadLine();
-            Console.Write("Inserisci nuovo cognome: ");
-            string nuovoCognome = Console.ReadLine();
-            Console.Write("Inserisci nuova età: ");
-            int nuovaEta = int.Parse(Console.ReadLine());
-            Console.WriteLine("Inserisci la media dei voti del nuovo studente");
-            double nuovaMediaVoti = double.Parse(Console.ReadLine());
-        }
+        //if (id >= 0 && id < listaStudenti.Count)
+        //{
+        //    Console.Write("Inserisci nuovo nome: ");
+        //    string nuovoNome = Console.ReadLine();
+        //    Console.Write("Inserisci nuovo cognome: ");
+        //    string nuovoCognome = Console.ReadLine();
+        //    Console.Write("Inserisci nuova età: ");
+        //    int nuovaEta = int.Parse(Console.ReadLine());
+        //    Console.WriteLine("Inserisci la media dei voti del nuovo studente");
+        //    double nuovaMediaVoti = double.Parse(Console.ReadLine());
+        //}
 
-        else
-        {
-            Console.WriteLine("Id non trovato");
-        }
+        //else
+        //{
+        //    Console.WriteLine("Id non trovato");
+        //}
+
+        var studenteDaModificare = listaStudenti.Single(s => s.id == id);
+        
+        Console.WriteLine("Inserisci il nuovo nome:");
+        string nuovoNome = Console.ReadLine();
+
+        Studente studente = new Studente();
+        studenteDaModificare.nome = nuovoNome;
+
+        Console.WriteLine("Inserisci il nuovo cognome:");
+        string nuovoCognome = Console.ReadLine();
+
+        studenteDaModificare.cognome = nuovoCognome;
+
+        Console.WriteLine("Inserisci la nuova eta:");
+        int nuovaEta = int.Parse(Console.ReadLine());
+
+        studenteDaModificare.eta = nuovaEta;
+
+        Console.WriteLine("Inserisci la media dei voti");
+        double nuovaMediaVoti = double.Parse(Console.ReadLine());
+
+        studenteDaModificare.mediaVoti = nuovaMediaVoti;
     }
 
     static void MostraListaStudenti()
