@@ -29,7 +29,8 @@ static class Program
             Console.WriteLine("4. Mostra lista studenti");
             Console.WriteLine("5. Ordina per età (crescente)");
             Console.WriteLine("6. Ordina per età (decrescente)");
-            Console.WriteLine("7. Esci");
+            Console.WriteLine("7. Aggiungi un esame ad uno studente");
+            Console.WriteLine("8. Esci");
 
             Console.Write("Scelta:");
             string scelta = Console.ReadLine();
