@@ -27,11 +27,12 @@ static class Program
             Console.WriteLine("2. Elimina studente");
             Console.WriteLine("3. Modifica studente");
             Console.WriteLine("4. Mostra lista studenti");
-            Console.WriteLine("5. Filtra studenti");
-            Console.WriteLine("6. Ordina per età (crescente)");
-            Console.WriteLine("7. Ordina per età (decrescente)");
-            Console.WriteLine("8. Aggiungi un esame ad uno studente");
-            Console.WriteLine("9. Esci");
+            Console.WriteLine("5. Filtra studenti per nome");
+            Console.WriteLine("6. Filtra studenti per cognome");
+            Console.WriteLine("7. Ordina per età (crescente)");
+            Console.WriteLine("8. Ordina per età (decrescente)");
+            Console.WriteLine("9. Aggiungi un esame ad uno studente");
+            Console.WriteLine("0. Esci");
 
             Console.Write("Scelta:");
             string scelta = Console.ReadLine();
@@ -52,21 +53,24 @@ static class Program
                     MostraListaStudenti();
                     break;
                 case "5":
-                    FiltraStudenti();
+                    FiltraStudentiNome();
                     //Console.WriteLine("1. Filtra per nome:");
 
                     //Console.WriteLine("2. Filtra per cognome:");
                     break;
                 case "6":
-                    OrdinaPerEtaCrescente();
+                    FiltraStudentiCognome();
                     break;
                 case "7":
-                    OrdinaPerEtaDecrescente();
+                    OrdinaPerEtaCrescente();
                     break;
                 case "8":
-                    AggiungiEsameStudente();
+                    OrdinaPerEtaDecrescente();
                     break;
                 case "9":
+                    AggiungiEsameStudente();
+                    break;
+                case "0":
                     continua = false;
                     break;
                 default:
@@ -77,12 +81,13 @@ static class Program
         }
     }
 
+
     static void AggiungiStudente()
     {
         try
         {
             //Console.Write("Inserisci id studente:");
-            //int id = int.Parse(Console.ReadLine()); //FIXME id deve essere progressivo   GUID VEDERE METODO GENERAZIONE
+            //int id = int.Parse(Console.ReadLine()); 
             Guid guid = Guid.NewGuid();
 
             Console.WriteLine("ID progressivo: " + guid);
@@ -135,7 +140,7 @@ static class Program
 
         //listaStudenti.Remove(id);
 
-        //var studenteDaRimuovere = listaStudenti.Single(s => s.guidString == guidString); //FIXME FARE TRY CATCH    FIRSTORDEFAULT
+        //var studenteDaRimuovere = listaStudenti.Single(s => s.guidString == guidString); 
         //listaStudenti.Remove(studenteDaRimuovere);
 
         var studenteDaRimuovere = listaStudenti.FirstOrDefault(s => s.guidString == guidString);
@@ -165,7 +170,7 @@ static class Program
         //    Console.WriteLine("Id non trovato");
         //}
 
-        /*var studenteDaModificare = listaStudenti.Single(s => s.guidString == guidString); *///FIXME CONTROLLO   FIRSTORDEFAULT
+        /*var studenteDaModificare = listaStudenti.Single(s => s.guidString == guidString); */
         var studenteDaModificare = listaStudenti.FirstOrDefault(s => s.guidString == guidString);
 
 
@@ -247,7 +252,7 @@ static class Program
 
     }
 
-    static void FiltraStudenti() //TODO filtraggio per altri attributi oltre al nome 
+    static void FiltraStudentiNome() //TODO filtraggio per altri attributi oltre al nome 
     {
 
         Console.WriteLine("Inserire il nome che si vuole cercare:");
@@ -264,7 +269,7 @@ static class Program
 
         foreach (var studente in studenteFiltratoNome)
         {
-            Console.WriteLine($"Id: {studente.guidString}, Nome: {studente.nome}, Cognome: {studente.cognome}, Età: {studente.eta}, Media Voti: {studente.mediaVoti}");
+            Console.WriteLine($"Id: {studente.guidString}, Nome: {studente.nome}, Cognome: {studente.cognome}, Età: {studente.eta}, Media Voti: {studente.mediaVoti}, Esami fatti: {studente.Esami}");
         }
 
 
@@ -274,6 +279,22 @@ static class Program
         //                  where Studente.cognome == Studente.cognome
         //                  select Studente;
         //}
+    }
+
+    static void FiltraStudentiCognome()
+    {
+        Console.WriteLine("Inserire il cognome che si vuole cercare:");
+        string cognomeDaCercare = "";
+        cognomeDaCercare = Console.ReadLine();
+
+        var studenteFiltratoCognome = from Studente in listaStudenti
+                                      where Studente.cognome == cognomeDaCercare
+                                      select Studente;
+
+        foreach(var studente in studenteFiltratoCognome)
+        {
+            Console.WriteLine($"Cognome: {studente.cognome},  Nome: {studente.nome}, Id: {studente.guidString}, Età: {studente.eta}, Media Voti: {studente.mediaVoti}, Esami fatti: {studente.Esami}");
+        }
     }
 
 
@@ -294,7 +315,7 @@ static class Program
     static void AggiungiEsameStudente()
     {
         Console.WriteLine("Inserire l'id dello studente al quale aggiungere l'esame:");
-        /*int id = int.Parse(Console.ReadLine());*/ //FIXME TROVA STUDENTE 
+        /*int id = int.Parse(Console.ReadLine());*/ 
         string guidString = Console.ReadLine();
         var studenteEsame = listaStudenti.FirstOrDefault(s => s.guidString == guidString);
 
@@ -313,7 +334,7 @@ static class Program
 
 
             //Console.WriteLine("Inserire data dell'esame");
-            //DateTime data = DateTime.Now;   //FIXME ?
+            //DateTime data = DateTime.Now;   
 
             Console.WriteLine("Inserire data dell'esame");
 
@@ -336,7 +357,7 @@ static class Program
 
             //while (dt);
 
-            Console.WriteLine("Inserire il voto ottenuto all'esame dallo studente"); //FIXME CONTROLLO SUL VOTO
+            Console.WriteLine("Inserire il voto ottenuto all'esame dallo studente"); 
             esame.voto = int.Parse(Console.ReadLine());
             if(esame.voto >= 18 && esame.voto < 30)
             {
