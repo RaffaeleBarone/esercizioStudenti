@@ -9,7 +9,7 @@ namespace esercizioStudenti
 {
     internal class Studente
     {
-        public int id {  get; set; }
+        public string guidString {  get; set; }
         public string nome { get; set; }
         public string cognome { get; set; }
         public int eta { get; set; }
@@ -17,9 +17,9 @@ namespace esercizioStudenti
         public List<Esame> Esami { get; set; }
 
 
-        public Studente(int id, string nome, string cognome, int eta, double mediaVoti)
+        public Studente(string guidString, string nome, string cognome, int eta, double mediaVoti)
         {
-            this.id = id;
+            this.guidString = guidString;
             this.nome = nome;
             this.cognome = cognome;
             this.eta = eta;
@@ -36,11 +36,6 @@ namespace esercizioStudenti
             return listaEsami; ;
         }
 
-        public void AggiungiEsame(int studenteID, int index, string materia, DateTime data, int voto)
-        {
-            Esame esame = new Esame(studenteID, materia, data, voto);
-            Esami.Add(esame);                  
-        }
 
         public void ModificaEsame(string nuovaMateria, DateTime nuovaData, int nuovoVoto)
         {
@@ -67,7 +62,7 @@ namespace esercizioStudenti
         }
         public override string ToString()
         {
-            return $"ID: {id}, Nome: {nome}, Cognome: {cognome}, Età: {eta}, Media voti: {mediaVoti}";
+            return $"ID: {guidString}, Nome: {nome}, Cognome: {cognome}, Età: {eta}, Media voti: {mediaVoti}";
         }
     }
 }

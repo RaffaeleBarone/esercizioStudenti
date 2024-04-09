@@ -27,10 +27,11 @@ static class Program
             Console.WriteLine("2. Elimina studente");
             Console.WriteLine("3. Modifica studente");
             Console.WriteLine("4. Mostra lista studenti");
-            Console.WriteLine("5. Ordina per età (crescente)");
-            Console.WriteLine("6. Ordina per età (decrescente)");
-            Console.WriteLine("7. Aggiungi un esame ad uno studente");
-            Console.WriteLine("8. Esci");
+            Console.WriteLine("5. Filtra studenti");
+            Console.WriteLine("6. Ordina per età (crescente)");
+            Console.WriteLine("7. Ordina per età (decrescente)");
+            Console.WriteLine("8. Aggiungi un esame ad uno studente");
+            Console.WriteLine("9. Esci");
 
             Console.Write("Scelta:");
             string scelta = Console.ReadLine();
@@ -51,15 +52,21 @@ static class Program
                     MostraListaStudenti();
                     break;
                 case "5":
-                    OrdinaPerEtaCrescente();
+                    FiltraStudenti();
+                    //Console.WriteLine("1. Filtra per nome:");
+
+                    //Console.WriteLine("2. Filtra per cognome:");
                     break;
                 case "6":
-                    OrdinaPerEtaDecrescente();
+                    OrdinaPerEtaCrescente();
                     break;
                 case "7":
-                    AggiungiEsameStudente();
+                    OrdinaPerEtaDecrescente();
                     break;
                 case "8":
+                    AggiungiEsameStudente();
+                    break;
+                case "9":
                     continua = false;
                     break;
                 default:
@@ -74,8 +81,14 @@ static class Program
     {
         try
         {
-            Console.Write("Inserisci id studente:");
-            int id = int.Parse(Console.ReadLine());
+            //Console.Write("Inserisci id studente:");
+            //int id = int.Parse(Console.ReadLine()); //FIXME id deve essere progressivo   GUID VEDERE METODO GENERAZIONE
+            Guid guid = Guid.NewGuid();
+
+            Console.WriteLine("ID progressivo: " + guid);
+            string guidString = guid.ToString();
+
+
             Console.WriteLine("Inserisci il nome dello studente:");
             string nome = Console.ReadLine();
             Console.WriteLine("Inserisci il cognome dello studente:");
@@ -85,7 +98,7 @@ static class Program
             Console.WriteLine("Inserisci la media dei voti dello studente:");
             double mediaVoti = double.Parse(Console.ReadLine());
 
-            Studente nuovoStudente = new Studente(id, nome, cognome, eta, mediaVoti);
+            Studente nuovoStudente = new Studente(guidString, nome, cognome, eta, mediaVoti);
             listaStudenti.Add(nuovoStudente);
 
             Console.WriteLine("Studente aggiunto!");
@@ -113,7 +126,7 @@ static class Program
         //}
 
         Console.Write("Inserisci l'id dello studente da eliminare:");
-        int id = int.Parse(Console.ReadLine());
+        string guidString = Console.ReadLine();
 
         //foreach(Studente studente in listaStudenti)
         //{
@@ -122,7 +135,10 @@ static class Program
 
         //listaStudenti.Remove(id);
 
-        var studenteDaRimuovere = listaStudenti.Single(s => s.id == id);
+        //var studenteDaRimuovere = listaStudenti.Single(s => s.guidString == guidString); //FIXME FARE TRY CATCH    FIRSTORDEFAULT
+        //listaStudenti.Remove(studenteDaRimuovere);
+
+        var studenteDaRimuovere = listaStudenti.FirstOrDefault(s => s.guidString == guidString);
         listaStudenti.Remove(studenteDaRimuovere);
 
     }
@@ -130,7 +146,7 @@ static class Program
     static void ModificaStudente()
     {
         Console.Write("Inserisci l'id dello studente da modificare:");
-        int id = int.Parse(Console.ReadLine());
+        string guidString = Console.ReadLine();
 
         //if (id >= 0 && id < listaStudenti.Count)
         //{
@@ -149,8 +165,11 @@ static class Program
         //    Console.WriteLine("Id non trovato");
         //}
 
-        var studenteDaModificare = listaStudenti.Single(s => s.id == id);
-        
+        /*var studenteDaModificare = listaStudenti.Single(s => s.guidString == guidString); *///FIXME CONTROLLO   FIRSTORDEFAULT
+        var studenteDaModificare = listaStudenti.FirstOrDefault(s => s.guidString == guidString);
+
+
+
         Console.WriteLine("Inserisci il nuovo nome:");
         string nuovoNome = Console.ReadLine();
 
@@ -187,55 +206,141 @@ static class Program
             Console.WriteLine($"{i}. {listaStudenti[i]}");
         }
 
-        for (int i = 0; i < listaStudenti.Count; i++)
+        listaStudenti.Select(s => new StudenteEsamiDTO
         {
-            Console.WriteLine(listaEsami);
+            studenteNome = s.nome,
+            Esami = listaEsami
+        .Where(e => e.studenteID == s.guidString)
+        .Select(e => new EsamiDTO
+        {
+            Voto = e.voto
+        }).ToList()
 
-            Studente studente = new Studente();
+        });
 
-            Console.WriteLine(studente.mediaVoti);
+        var esameStudente = listaStudenti
+            .Join(listaEsami,
+            s => s.guidString,
+            e => e.studenteID,
+            (s, e) => new { Studente = s, Esame = e })
+            .GroupBy(x => x.Studente)
+            .Select(x => new StudenteEsamiDTO
+            {
+                studenteID = x.Key.nome,
+                Esami = x.Select(e => new EsamiDTO
+                {
+                    Materia = e.Esame.materia,
+                    Data = e.Esame.data,
+                    Voto = e.Esame.voto
+                }).OrderBy(d => d.Data).ToList()
+            });
+
+        //foreach (var item in esameStudente)
+        //{
+        //    Console.WriteLine($"Cognome: {item.studenteCognome}");
+        //}
+
+
+        //var esameStudente = from Studente in listaStudenti
+        //                               join Esame in listaEsami on Studente.guidString equals Esame.studenteID                                      
+        //                               select new { Studente, Esame };
+
+    }
+
+        static void FiltraStudenti() //TODO filtraggio per altri attributi oltre al nome 
+        {
+
+            Console.WriteLine("Inserire il nome che si vuole cercare:");
+            //Studente studente = new Studente();
+            string nomeDaCercare = "";
+            nomeDaCercare = Console.ReadLine();
+            //Studente studente = new Studente();
+            //nome = Console.ReadLine();
+
+
+            var studenteFiltratoNome = from Studente in listaStudenti
+                                       where Studente.nome == nomeDaCercare
+                                       select Studente;
+
+            foreach (var studente in studenteFiltratoNome)
+            {
+                Console.WriteLine($"Id: {studente.guidString}, Nome: {studente.nome}, Cognome: {studente.cognome}, Età: {studente.eta}, Media Voti: {studente.mediaVoti}");
+            }
+
+
+            //static void FiltraPerCognome()
+            //{
+            //    var cognome = from Studente in listaStudenti
+            //                  where Studente.cognome == Studente.cognome
+            //                  select Studente;
+            //}
+        }
+
+
+        static void OrdinaPerEtaCrescente()
+        {
+            listaStudenti = listaStudenti.OrderBy(s => s.eta).ToList();
+            Console.WriteLine("Lista degli studenti ordinata per età in ordine crescente:");
+            MostraListaStudenti();
+        }
+
+        static void OrdinaPerEtaDecrescente()
+        {
+            listaStudenti = listaStudenti.OrderByDescending(s => s.eta).ToList();
+            Console.WriteLine("Lista degli studenti ordinata per età in ordine decrescente:");
+            MostraListaStudenti();
+        }
+
+        static void AggiungiEsameStudente()
+        {
+            Console.WriteLine("Inserire l'id dello studente al quale aggiungere l'esame:");
+            /*int id = int.Parse(Console.ReadLine());*/ //FIXME TROVA STUDENTE 
+            string guidString = Console.ReadLine();
+            var studenteEsame = listaStudenti.FirstOrDefault(s => s.guidString == guidString);
+
+
+
+            if (studenteEsame != null)
+            {
+                Esame esame = new Esame();
+                esame.studenteID = studenteEsame.guidString;
+
+
+
+
+                Console.WriteLine("Inserire materia d'esame");
+                esame.materia = Console.ReadLine();
+
+
+                //Console.WriteLine("Inserire data dell'esame");
+                //DateTime data = DateTime.Now;   //FIXME ?
+
+                Console.WriteLine("Inserire data dell'esame");
+
+                var dt = DateTime.TryParse(Console.ReadLine(), out var result);
+                if (dt) //FIXME FAI DO WHILE
+                {
+
+                    esame.data = result;
+                }
+
+                else
+                {
+                    Console.WriteLine("Inserire un formato di data valido!");
+                }
+
+                Console.WriteLine("Inserire il voto ottenuto all'esame dallo studente"); //FIXME CONTROLLO SUL VOTO
+                esame.voto = int.Parse(Console.ReadLine());
+
+
+                listaEsami.Add(esame);
+
+
+            }
+
+            else
+            {
+                Console.WriteLine("Id non trovato");
+            }
         }
     }
-
-
-    static void OrdinaPerEtaCrescente()
-    {
-        listaStudenti = listaStudenti.OrderBy(s => s.eta).ToList();
-        Console.WriteLine("Lista degli studenti ordinata per età in ordine crescente:");
-        MostraListaStudenti();
-    }
-
-    static void OrdinaPerEtaDecrescente()
-    {
-        listaStudenti = listaStudenti.OrderByDescending(s => s.eta).ToList();
-        Console.WriteLine("Lista degli studenti ordinata per età in ordine decrescente:");
-        MostraListaStudenti();
-    }
-
-    static void AggiungiEsameStudente()
-    {
-        Console.WriteLine("Inserire l'id dello studente al quale aggiungere l'esame:");
-        int id = int.Parse(Console.ReadLine());
-
-        if (id >= 0 && id < listaStudenti.Count)
-        {
-
-            Console.WriteLine("Inserire materia d'esame");
-            string materia = Console.ReadLine();
-
-            Console.WriteLine("Inserire data dell'esame");
-            DateTime data = DateTime.Now;   //FIXME ?
-
-            Console.WriteLine("Inserire il voto ottenuto all'esame dallo studente");
-            int voto = int.Parse(Console.ReadLine());
-
-            Esame nuovoEsame = new Esame(materia, data, voto);
-            listaEsami.Add(nuovoEsame);
-        }
-
-        else
-        {
-            Console.WriteLine("Id non trovato");
-        }
-    }
-}
