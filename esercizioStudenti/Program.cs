@@ -247,100 +247,118 @@ static class Program
 
     }
 
-        static void FiltraStudenti() //TODO filtraggio per altri attributi oltre al nome 
+    static void FiltraStudenti() //TODO filtraggio per altri attributi oltre al nome 
+    {
+
+        Console.WriteLine("Inserire il nome che si vuole cercare:");
+        //Studente studente = new Studente();
+        string nomeDaCercare = "";
+        nomeDaCercare = Console.ReadLine();
+        //Studente studente = new Studente();
+        //nome = Console.ReadLine();
+
+
+        var studenteFiltratoNome = from Studente in listaStudenti
+                                   where Studente.nome == nomeDaCercare
+                                   select Studente;
+
+        foreach (var studente in studenteFiltratoNome)
         {
-
-            Console.WriteLine("Inserire il nome che si vuole cercare:");
-            //Studente studente = new Studente();
-            string nomeDaCercare = "";
-            nomeDaCercare = Console.ReadLine();
-            //Studente studente = new Studente();
-            //nome = Console.ReadLine();
+            Console.WriteLine($"Id: {studente.guidString}, Nome: {studente.nome}, Cognome: {studente.cognome}, Età: {studente.eta}, Media Voti: {studente.mediaVoti}");
+        }
 
 
-            var studenteFiltratoNome = from Studente in listaStudenti
-                                       where Studente.nome == nomeDaCercare
-                                       select Studente;
+        //static void FiltraPerCognome()
+        //{
+        //    var cognome = from Studente in listaStudenti
+        //                  where Studente.cognome == Studente.cognome
+        //                  select Studente;
+        //}
+    }
 
-            foreach (var studente in studenteFiltratoNome)
+
+    static void OrdinaPerEtaCrescente()
+    {
+        listaStudenti = listaStudenti.OrderBy(s => s.eta).ToList();
+        Console.WriteLine("Lista degli studenti ordinata per età in ordine crescente:");
+        MostraListaStudenti();
+    }
+
+    static void OrdinaPerEtaDecrescente()
+    {
+        listaStudenti = listaStudenti.OrderByDescending(s => s.eta).ToList();
+        Console.WriteLine("Lista degli studenti ordinata per età in ordine decrescente:");
+        MostraListaStudenti();
+    }
+
+    static void AggiungiEsameStudente()
+    {
+        Console.WriteLine("Inserire l'id dello studente al quale aggiungere l'esame:");
+        /*int id = int.Parse(Console.ReadLine());*/ //FIXME TROVA STUDENTE 
+        string guidString = Console.ReadLine();
+        var studenteEsame = listaStudenti.FirstOrDefault(s => s.guidString == guidString);
+
+
+
+        if (studenteEsame != null)
+        {
+            Esame esame = new Esame();
+            esame.studenteID = studenteEsame.guidString;
+
+
+
+
+            Console.WriteLine("Inserire materia d'esame");
+            esame.materia = Console.ReadLine();
+
+
+            //Console.WriteLine("Inserire data dell'esame");
+            //DateTime data = DateTime.Now;   //FIXME ?
+
+            Console.WriteLine("Inserire data dell'esame");
+
+            var dt = DateTime.TryParse(Console.ReadLine(), out var result);
+            if (dt) //FIXME FAI DO WHILE
             {
-                Console.WriteLine($"Id: {studente.guidString}, Nome: {studente.nome}, Cognome: {studente.cognome}, Età: {studente.eta}, Media Voti: {studente.mediaVoti}");
-            }
 
-
-            //static void FiltraPerCognome()
-            //{
-            //    var cognome = from Studente in listaStudenti
-            //                  where Studente.cognome == Studente.cognome
-            //                  select Studente;
-            //}
-        }
-
-
-        static void OrdinaPerEtaCrescente()
-        {
-            listaStudenti = listaStudenti.OrderBy(s => s.eta).ToList();
-            Console.WriteLine("Lista degli studenti ordinata per età in ordine crescente:");
-            MostraListaStudenti();
-        }
-
-        static void OrdinaPerEtaDecrescente()
-        {
-            listaStudenti = listaStudenti.OrderByDescending(s => s.eta).ToList();
-            Console.WriteLine("Lista degli studenti ordinata per età in ordine decrescente:");
-            MostraListaStudenti();
-        }
-
-        static void AggiungiEsameStudente()
-        {
-            Console.WriteLine("Inserire l'id dello studente al quale aggiungere l'esame:");
-            /*int id = int.Parse(Console.ReadLine());*/ //FIXME TROVA STUDENTE 
-            string guidString = Console.ReadLine();
-            var studenteEsame = listaStudenti.FirstOrDefault(s => s.guidString == guidString);
-
-
-
-            if (studenteEsame != null)
-            {
-                Esame esame = new Esame();
-                esame.studenteID = studenteEsame.guidString;
-
-
-
-
-                Console.WriteLine("Inserire materia d'esame");
-                esame.materia = Console.ReadLine();
-
-
-                //Console.WriteLine("Inserire data dell'esame");
-                //DateTime data = DateTime.Now;   //FIXME ?
-
-                Console.WriteLine("Inserire data dell'esame");
-
-                var dt = DateTime.TryParse(Console.ReadLine(), out var result);
-                if (dt) //FIXME FAI DO WHILE
-                {
-
-                    esame.data = result;
-                }
-
-                else
-                {
-                    Console.WriteLine("Inserire un formato di data valido!");
-                }
-
-                Console.WriteLine("Inserire il voto ottenuto all'esame dallo studente"); //FIXME CONTROLLO SUL VOTO
-                esame.voto = int.Parse(Console.ReadLine());
-
-
-                listaEsami.Add(esame);
-
-
+                esame.data = result;
             }
 
             else
             {
-                Console.WriteLine("Id non trovato");
+                Console.WriteLine("Inserire un formato di data valido!");
             }
+
+            //do
+            //{
+            //    esame.data = result;
+            //}
+
+            //while (dt);
+
+            Console.WriteLine("Inserire il voto ottenuto all'esame dallo studente"); //FIXME CONTROLLO SUL VOTO
+            esame.voto = int.Parse(Console.ReadLine());
+            if(esame.voto >= 18 && esame.voto < 30)
+            {
+                Console.WriteLine("Esame superato! Verrà aggiunto alla carriera dello studente!");
+                listaEsami.Add(esame);
+            }
+
+            else
+            {
+                Console.WriteLine("Esame non superato!");
+            }
+
+            
+
+
         }
+
+        else
+        {
+            Console.WriteLine("Id non trovato");
+        }
+
+
+    }
     }
