@@ -54,9 +54,6 @@ static class Program
                     break;
                 case "5":
                     FiltraStudentiNome();
-                    //Console.WriteLine("1. Filtra per nome:");
-
-                    //Console.WriteLine("2. Filtra per cognome:");
                     break;
                 case "6":
                     FiltraStudentiCognome();
